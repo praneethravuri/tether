@@ -1,4 +1,4 @@
-# intern — build, test, and release targets. CGO_ENABLED=0 keeps the pure-Go
+# tether — build, test, and release targets. CGO_ENABLED=0 keeps the pure-Go
 # SQLite build self-contained.
 
 SHELL := /bin/sh
@@ -10,7 +10,7 @@ GO       ?= go
 LDFLAGS  := -s -w -X main.version=$(VERSION)
 GOFLAGS  := -trimpath -ldflags "$(LDFLAGS)"
 
-BIN       := intern
+BIN       := tether
 DIST      := dist
 COVERFILE := coverage.out
 
@@ -18,16 +18,16 @@ COVERFILE := coverage.out
 
 .PHONY: help
 help: ## Show this help
-	@echo "intern $(VERSION)"
+	@echo "tether $(VERSION)"
 	@echo
 	@awk 'BEGIN {FS = ":.*## "} /^[a-zA-Z_-]+:.*## / {printf "  \033[1m%-12s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 
 .PHONY: build
-build: ## Build ./intern with the version stamped in
+build: ## Build ./tether with the version stamped in
 	CGO_ENABLED=0 $(GO) build $(GOFLAGS) -o $(BIN) ./cmd/$(BIN)
 
 .PHONY: install
-install: ## go install intern into GOBIN
+install: ## go install tether into GOBIN
 	CGO_ENABLED=0 $(GO) install $(GOFLAGS) ./cmd/$(BIN)
 
 .PHONY: test

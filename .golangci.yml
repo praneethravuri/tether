@@ -15,7 +15,7 @@ linters:
     rules:
       # --body-file reads a path the user passed on the CLI by design; no
       # elevated-privilege boundary is being crossed.
-      - path: cmd/intern/cmd_send\.go
+      - path: cmd/tether/cmd_send\.go
         linters:
           - gosec
         text: "G304"
@@ -30,16 +30,16 @@ linters:
           - gosec
         text: "G304"
       # autostart.go re-execs os.Executable() (this same binary) and reads/
-      # writes only its own derived ~/.intern/daemon.log path, never
+      # writes only its own derived ~/.tether/daemon.log path, never
       # untrusted input.
-      - path: cmd/intern/autostart(_test)?\.go
+      - path: cmd/tether/autostart(_test)?\.go
         linters:
           - gosec
         text: "G204|G304"
       # setIdentity's workspace parameter happens to be "storefront" at
       # every current call site, but it is a general-purpose test helper --
       # a future test naming a different workspace is the point of keeping it.
-      - path: cmd/intern/helper_test\.go
+      - path: cmd/tether/helper_test\.go
         linters:
           - unparam
         text: "setIdentity"

@@ -7,18 +7,18 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/praneethravuri/intern/internal/protocol"
+	"github.com/praneethravuri/tether/internal/protocol"
 )
 
-const doctorLong = `Check that intern is actually working, and say so plainly when it is not.
+const doctorLong = `Check that tether is actually working, and say so plainly when it is not.
 
 doctor reports the socket it would talk to, whether the daemon is answering,
 which workspace this directory resolves to, which harness it detects, and
 every agent registered here.
 
 Nothing currently pushes a notification when mail arrives, so every agent
-sees a message only if it polls with ` + "`intern inbox`" + ` or blocks on
-` + "`intern wait`" + `.
+sees a message only if it polls with ` + "`tether inbox`" + ` or blocks on
+` + "`tether wait`" + `.
 
 Output is JSON by default. Exits 3 when no daemon is reachable.`
 
@@ -45,7 +45,7 @@ func newDoctorCmd() *cobra.Command {
 		Use:     "doctor",
 		Short:   "Check the daemon, this workspace, and every agent here",
 		Long:    doctorLong,
-		Example: "  intern doctor",
+		Example: "  tether doctor",
 		Args:    cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return runDoctor(cmd, &opts)
@@ -83,7 +83,7 @@ func collectDoctorReport(workspaceFlag string) doctorReport {
 		socketResolved = true
 	} else {
 		report.Socket = "unknown"
-		report.Error = fmt.Sprintf("cannot work out where the intern socket lives: %v", err)
+		report.Error = fmt.Sprintf("cannot work out where the tether socket lives: %v", err)
 	}
 
 	if cwd, err := os.Getwd(); err == nil {

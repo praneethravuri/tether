@@ -6,9 +6,9 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/praneethravuri/intern/internal/protocol"
-	"github.com/praneethravuri/intern/internal/sanitize"
-	"github.com/praneethravuri/intern/internal/store"
+	"github.com/praneethravuri/tether/internal/protocol"
+	"github.com/praneethravuri/tether/internal/sanitize"
+	"github.com/praneethravuri/tether/internal/store"
 )
 
 // stripControl replaces C0 control bytes and DEL with a space, so

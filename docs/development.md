@@ -1,6 +1,6 @@
 # Development
 
-Intern is a Go CLI plus an auto-started local daemon. The daemon exposes a
+Tether is a Go CLI plus an auto-started local daemon. The daemon exposes a
 Unix socket and persists workspace-scoped messages and claims in SQLite.
 Changes to command behavior must keep the Cobra help, README, bundled agent
 skill, and tests aligned.
@@ -15,7 +15,7 @@ skill, and tests aligned.
 ## Local development
 
 ```sh
-make build       # builds ./intern with a version derived from git
+make build       # builds ./tether with a version derived from git
 make test        # race-enabled package tests
 make lint        # golangci-lint
 make fmt         # formats Go files in place
@@ -26,15 +26,15 @@ make tidy        # updates module metadata
 Run the binary from another terminal while developing:
 
 ```sh
-./intern start
+./tether start
 ```
 
 Daemon-facing client commands auto-start the daemon when needed, so normally
-you can run `./intern register <name>`, `./intern send ...`, and the other
-commands directly. `./intern doctor` is the intentional exception: it only
+you can run `./tether register <name>`, `./tether send ...`, and the other
+commands directly. `./tether doctor` is the intentional exception: it only
 reports whether a daemon is reachable. For an isolated local run, set
-`INTERN_SOCK`, `INTERN_DB`, and `INTERN_WORKSPACE` to test-specific values.
-The directory containing an overridden `INTERN_SOCK` must not be writable by
+`TETHER_SOCK`, `TETHER_DB`, and `TETHER_WORKSPACE` to test-specific values.
+The directory containing an overridden `TETHER_SOCK` must not be writable by
 group or other users; use a fresh directory from `mktemp -d` (normally `0700`),
 not `/tmp` itself.
 
@@ -56,7 +56,7 @@ goreleaser release --snapshot --clean
 
 The snapshot must also pass the installer end-to-end check: serve its four
 archives and `checksums.txt` over trusted HTTPS, run `docs/install.sh` with
-`INTERN_BASE_URL` and a temporary `INTERN_INSTALL_DIR`, then run the installed
+`TETHER_BASE_URL` and a temporary `TETHER_INSTALL_DIR`, then run the installed
 binary's `version` command. The `install-e2e` GitHub Actions job is the
 canonical implementation of that check.
 
@@ -81,8 +81,8 @@ generated. When a command, positional argument, flag, output shape, or exit
 status changes, update all of these in the same change:
 
 - [`README.md`](../README.md)
-- [`skills/intern/SKILL.md`](../skills/intern/SKILL.md)
-- Cobra help and examples under `cmd/intern/`
+- [`skills/tether/SKILL.md`](../skills/tether/SKILL.md)
+- Cobra help and examples under `cmd/tether/`
 - tests that exercise the changed command
 
 Follow [`docs/releasing.md`](releasing.md) for the complete release procedure.

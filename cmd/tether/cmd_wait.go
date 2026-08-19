@@ -5,11 +5,11 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/praneethravuri/intern/internal/protocol"
+	"github.com/praneethravuri/tether/internal/protocol"
 )
 
 // defaultWaitTimeout is long enough to be useful in a shell loop and short
-// enough that a forgotten `intern wait` eventually returns.
+// enough that a forgotten `tether wait` eventually returns.
 const defaultWaitTimeout = 60 * time.Second
 
 // maxWaitTimeout keeps a typo like --timeout 60m0s0h from parking a process
@@ -22,7 +22,7 @@ The timeout is a Go duration such as 30s, 5m or 1h30m. Exits 0 as soon as there
 is something to read, and 4 if the timeout expires first, so a shell can branch
 on it:
 
-  if intern wait --timeout 2m; then intern inbox; fi
+  if tether wait --timeout 2m; then tether inbox; fi
 
 This is the polling-free way to idle: agents whose harness the daemon cannot
 wake should sit in wait rather than calling inbox in a loop.
@@ -41,9 +41,9 @@ func newWaitCmd() *cobra.Command {
 		Use:   "wait",
 		Short: "Block until a message is waiting",
 		Long:  waitLong,
-		Example: "  intern wait\n" +
-			"  intern wait --timeout 5m\n" +
-			"  intern wait --as frontend --timeout 30s",
+		Example: "  tether wait\n" +
+			"  tether wait --timeout 5m\n" +
+			"  tether wait --as frontend --timeout 30s",
 		Args: cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return runWait(cmd, &opts)

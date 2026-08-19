@@ -8,8 +8,8 @@ import (
 	"os"
 	"time"
 
-	"github.com/praneethravuri/intern/internal/id"
-	"github.com/praneethravuri/intern/internal/protocol"
+	"github.com/praneethravuri/tether/internal/id"
+	"github.com/praneethravuri/tether/internal/protocol"
 )
 
 const (
@@ -41,7 +41,7 @@ func call(method string, params, result any) error {
 func doCall(method string, params, result any, timeout time.Duration, autoStart bool) error {
 	sock, err := protocol.SocketPath()
 	if err != nil {
-		return failf(exitGeneral, "cannot work out where the intern socket lives: %v", err)
+		return failf(exitGeneral, "cannot work out where the tether socket lives: %v", err)
 	}
 
 	conn, err := dial(sock, autoStart)
@@ -87,7 +87,7 @@ func doCall(method string, params, result any, timeout time.Duration, autoStart 
 	}
 	if err := json.Unmarshal(resp.Result, result); err != nil {
 		return failf(exitGeneral,
-			"the daemon sent a %s result this version of intern cannot read: %v", method, err)
+			"the daemon sent a %s result this version of tether cannot read: %v", method, err)
 	}
 
 	return nil
@@ -103,13 +103,13 @@ func dial(sock string, autoStart bool) (net.Conn, error) {
 	}
 	if !autoStart {
 		return nil, failf(exitNoDaemon,
-			"no daemon running (tried socket %s) — start it with `intern start`", sock)
+			"no daemon running (tried socket %s) — start it with `tether start`", sock)
 	}
 
 	if startErr := spawnDaemon(sock); startErr != nil {
 		return nil, failf(exitNoDaemon,
 			"no daemon running (tried socket %s) and could not start one automatically: %v "+
-				"— start it manually with `intern start`", sock, startErr)
+				"— start it manually with `tether start`", sock, startErr)
 	}
 
 	conn, err = net.DialTimeout("unix", sock, dialTimeout)

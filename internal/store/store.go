@@ -1,4 +1,4 @@
-// Package store is intern's persistence layer: a SQLite-backed registry of
+// Package store is tether's persistence layer: a SQLite-backed registry of
 // live agents and a durable, ack-based mailbox.
 //
 // Reading an inbox never removes anything; a message leaves only via an
@@ -158,7 +158,7 @@ func (s *Store) migrate(ctx context.Context) error {
 	}
 	if version > currentSchemaVersion {
 		return fmt.Errorf(
-			"store: database schema v%d is newer than this binary understands (v%d) -- upgrade intern",
+			"store: database schema v%d is newer than this binary understands (v%d) -- upgrade tether",
 			version, currentSchemaVersion)
 	}
 

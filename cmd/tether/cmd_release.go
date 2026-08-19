@@ -6,12 +6,12 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/praneethravuri/intern/internal/protocol"
+	"github.com/praneethravuri/tether/internal/protocol"
 )
 
 const releaseLong = `Release a claim you hold.
 
---if-claim-id must be the lease id ` + "`intern claim`" + ` returned. The check happens
+--if-claim-id must be the lease id ` + "`tether claim`" + ` returned. The check happens
 in one atomic step on the daemon: a stale or mismatched id is rejected
 outright, never guessed at or silently ignored -- it can never release a
 claim it did not itself acquire, even one on the same key.`
@@ -28,7 +28,7 @@ func newReleaseCmd() *cobra.Command {
 		Use:     "release <key>",
 		Short:   "Release a claim you hold",
 		Long:    releaseLong,
-		Example: "  intern release src/main.go --if-claim-id 1a2b3c4d5e6f7890a1b2c3d4e5f67890",
+		Example: "  tether release src/main.go --if-claim-id 1a2b3c4d5e6f7890a1b2c3d4e5f67890",
 		Args:    cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return runRelease(cmd, args[0], &opts)
@@ -37,7 +37,7 @@ func newReleaseCmd() *cobra.Command {
 
 	opts.addWorkspace(cmd)
 	cmd.Flags().StringVar(&opts.leaseID, "if-claim-id", "",
-		"lease id returned by intern claim (required)")
+		"lease id returned by tether claim (required)")
 
 	return quiet(cmd)
 }
@@ -51,7 +51,7 @@ func runRelease(cmd *cobra.Command, key string, opts *releaseOptions) error {
 	leaseID := strings.TrimSpace(opts.leaseID)
 	if leaseID == "" {
 		return failf(exitGeneral,
-			"--if-claim-id is required — pass the lease id `intern claim` returned")
+			"--if-claim-id is required — pass the lease id `tether claim` returned")
 	}
 
 	params := protocol.ReleaseParams{Workspace: ws, Key: key, LeaseID: leaseID}
@@ -77,7 +77,7 @@ func releaseError(key, workspace string, err error) error {
 		return fail(exitConflict, fmt.Errorf(
 			"cannot release %s in %s: that claim id does not match its current lease "+
 				"(it may have been renewed or reclaimed since you got it) — "+
-				"run `intern claims` to see who holds it now", key, workspace))
+				"run `tether claims` to see who holds it now", key, workspace))
 	case protocol.CodeNotFound:
 		return fail(exitGeneral, fmt.Errorf("cannot release %s in %s: no such claim", key, workspace))
 	default:

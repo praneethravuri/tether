@@ -5,16 +5,16 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/praneethravuri/intern/internal/daemon"
+	"github.com/praneethravuri/tether/internal/daemon"
 )
 
 func TestDaemonBanner(t *testing.T) {
-	got := daemonBanner("/tmp/sock", "/tmp/intern.db")
+	got := daemonBanner("/tmp/sock", "/tmp/tether.db")
 	for _, want := range []string{
 		"running the daemon in the foreground",
 		"/tmp/sock",
-		"/tmp/intern.db",
-		"intern ls",
+		"/tmp/tether.db",
+		"tether ls",
 	} {
 		requireContains(t, got, want, "banner")
 	}

@@ -9,7 +9,7 @@ import (
 	"strings"
 )
 
-var errBadProcStat = errors.New("intern: malformed /proc/<pid>/stat")
+var errBadProcStat = errors.New("tether: malformed /proc/<pid>/stat")
 
 // StartTime reads pid's start time (clock ticks since boot) from
 // /proc/<pid>/stat field 22.

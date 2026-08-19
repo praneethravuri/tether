@@ -3,10 +3,10 @@ package main
 import (
 	"github.com/spf13/cobra"
 
-	"github.com/praneethravuri/intern/internal/protocol"
+	"github.com/praneethravuri/tether/internal/protocol"
 )
 
-// runRoot is root's RunE for a bare `intern` invocation: a JSON summary
+// runRoot is root's RunE for a bare `tether` invocation: a JSON summary
 // of the current workspace state.
 func runRoot(cmd *cobra.Command) error {
 	workspace, err := resolveWorkspace("")

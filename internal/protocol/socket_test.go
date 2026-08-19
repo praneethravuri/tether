@@ -19,7 +19,7 @@ import (
 // at ~104 bytes on macOS, and t.TempDir() can exceed that.
 func tempDir(t *testing.T) string {
 	t.Helper()
-	dir, err := os.MkdirTemp("/tmp", "intern-test-*")
+	dir, err := os.MkdirTemp("/tmp", "tether-test-*")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -28,7 +28,7 @@ func tempDir(t *testing.T) string {
 }
 
 func TestSocketPath_NoHome(t *testing.T) {
-	t.Setenv("INTERN_SOCK", "")
+	t.Setenv("TETHER_SOCK", "")
 	t.Setenv("XDG_RUNTIME_DIR", "")
 	t.Setenv("HOME", "")
 
@@ -39,7 +39,7 @@ func TestSocketPath_NoHome(t *testing.T) {
 
 func TestSocketPath_EnvOverride(t *testing.T) {
 	expected := "/tmp/custom.sock"
-	t.Setenv("INTERN_SOCK", expected) // t.Setenv safely cleans up after the test
+	t.Setenv("TETHER_SOCK", expected) // t.Setenv safely cleans up after the test
 
 	got, err := SocketPath()
 	if err != nil {
@@ -52,8 +52,8 @@ func TestSocketPath_EnvOverride(t *testing.T) {
 }
 
 func TestSocketPath_Precedence(t *testing.T) {
-	t.Run("INTERN_SOCK wins over XDG_RUNTIME_DIR", func(t *testing.T) {
-		t.Setenv("INTERN_SOCK", "/tmp/explicit.sock")
+	t.Run("TETHER_SOCK wins over XDG_RUNTIME_DIR", func(t *testing.T) {
+		t.Setenv("TETHER_SOCK", "/tmp/explicit.sock")
 		t.Setenv("XDG_RUNTIME_DIR", "/tmp/xdg")
 		t.Setenv("HOME", "/tmp/home")
 
@@ -67,7 +67,7 @@ func TestSocketPath_Precedence(t *testing.T) {
 	})
 
 	t.Run("XDG_RUNTIME_DIR wins over home", func(t *testing.T) {
-		t.Setenv("INTERN_SOCK", "")
+		t.Setenv("TETHER_SOCK", "")
 		t.Setenv("XDG_RUNTIME_DIR", "/tmp/xdg")
 		t.Setenv("HOME", "/tmp/home")
 
@@ -75,7 +75,7 @@ func TestSocketPath_Precedence(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		want := filepath.Join("/tmp/xdg", "intern", "sock")
+		want := filepath.Join("/tmp/xdg", "tether", "sock")
 		if got != want {
 			t.Errorf("got %q, want %q", got, want)
 		}
@@ -83,7 +83,7 @@ func TestSocketPath_Precedence(t *testing.T) {
 
 	t.Run("falls back to home", func(t *testing.T) {
 		home := tempDir(t)
-		t.Setenv("INTERN_SOCK", "")
+		t.Setenv("TETHER_SOCK", "")
 		t.Setenv("XDG_RUNTIME_DIR", "")
 		t.Setenv("HOME", home)
 
@@ -91,7 +91,7 @@ func TestSocketPath_Precedence(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		want := filepath.Join(home, ".intern", "sock")
+		want := filepath.Join(home, ".tether", "sock")
 		if got != want {
 			t.Errorf("got %q, want %q", got, want)
 		}
@@ -99,7 +99,7 @@ func TestSocketPath_Precedence(t *testing.T) {
 }
 
 func TestDBPath_EnvOverride(t *testing.T) {
-	t.Setenv("INTERN_DB", "/tmp/custom.db")
+	t.Setenv("TETHER_DB", "/tmp/custom.db")
 	t.Setenv("HOME", tempDir(t))
 
 	got, err := DBPath()
@@ -113,7 +113,7 @@ func TestDBPath_EnvOverride(t *testing.T) {
 
 func TestDBPath_DefaultUnderHome(t *testing.T) {
 	home := tempDir(t)
-	t.Setenv("INTERN_DB", "")
+	t.Setenv("TETHER_DB", "")
 	t.Setenv("HOME", home)
 
 	got, err := DBPath()
@@ -121,18 +121,18 @@ func TestDBPath_DefaultUnderHome(t *testing.T) {
 		t.Fatalf("DBPath() error = %v", err)
 	}
 
-	want := filepath.Join(home, ".intern", "intern.db")
+	want := filepath.Join(home, ".tether", "tether.db")
 	if got != want {
 		t.Errorf("got %q, want %q", got, want)
 	}
 
 	// The parent directory must exist and be 0700.
-	info, err := os.Stat(filepath.Join(home, ".intern"))
+	info, err := os.Stat(filepath.Join(home, ".tether"))
 	if err != nil {
-		t.Fatalf("~/.intern was not created: %v", err)
+		t.Fatalf("~/.tether was not created: %v", err)
 	}
 	if !info.IsDir() {
-		t.Fatal("~/.intern is not a directory")
+		t.Fatal("~/.tether is not a directory")
 	}
 	if info.Mode().Perm() != 0700 {
 		t.Errorf("dir permissions got %04o, want 0700", info.Mode().Perm())
@@ -145,7 +145,7 @@ func TestDBPath_DefaultUnderHome(t *testing.T) {
 }
 
 func TestDBPath_NoHome(t *testing.T) {
-	t.Setenv("INTERN_DB", "")
+	t.Setenv("TETHER_DB", "")
 	t.Setenv("HOME", "")
 
 	if _, err := DBPath(); err == nil {
@@ -155,15 +155,15 @@ func TestDBPath_NoHome(t *testing.T) {
 
 func TestDBPath_ParentIsAFile(t *testing.T) {
 	home := tempDir(t)
-	blocker := filepath.Join(home, ".intern")
+	blocker := filepath.Join(home, ".tether")
 	if err := os.WriteFile(blocker, []byte("not a directory"), 0o600); err != nil {
 		t.Fatalf("seed blocker file: %v", err)
 	}
-	t.Setenv("INTERN_DB", "")
+	t.Setenv("TETHER_DB", "")
 	t.Setenv("HOME", home)
 
 	if _, err := DBPath(); err == nil {
-		t.Fatal("DBPath() with a file where ~/.intern belongs: want error, got nil")
+		t.Fatal("DBPath() with a file where ~/.tether belongs: want error, got nil")
 	}
 }
 
@@ -176,7 +176,7 @@ func TestLogPath_DefaultUnderHome(t *testing.T) {
 		t.Fatalf("LogPath() error = %v", err)
 	}
 
-	want := filepath.Join(home, ".intern", "daemon.log")
+	want := filepath.Join(home, ".tether", "daemon.log")
 	if got != want {
 		t.Errorf("got %q, want %q", got, want)
 	}

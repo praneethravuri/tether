@@ -9,7 +9,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 
-	"github.com/praneethravuri/intern/internal/sanitize"
+	"github.com/praneethravuri/tether/internal/sanitize"
 )
 
 // quiet marks a command as reporting its own failures -- no "Error: ..." or

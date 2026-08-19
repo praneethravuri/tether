@@ -5,10 +5,10 @@ import (
 	"os"
 	"strings"
 
-	"github.com/praneethravuri/intern/internal/daemon"
-	"github.com/praneethravuri/intern/internal/proc"
-	"github.com/praneethravuri/intern/internal/sanitize"
-	"github.com/praneethravuri/intern/internal/wsname"
+	"github.com/praneethravuri/tether/internal/daemon"
+	"github.com/praneethravuri/tether/internal/proc"
+	"github.com/praneethravuri/tether/internal/sanitize"
+	"github.com/praneethravuri/tether/internal/wsname"
 )
 
 // Harness identifiers reported at registration time.
@@ -178,15 +178,15 @@ func env(key string) string {
 
 // envSessionOverride lets an unrecognised harness, or a test, supply its own
 // session id directly, bypassing the derivation below.
-const envSessionOverride = "INTERN_SESSION_ID"
+const envSessionOverride = "TETHER_SESSION_ID"
 
 // syntheticSessionID gives an unrecognised harness (including a plain shell)
 // a stable-per-shell id instead of empty, since an empty session_id never
-// matches on re-register and would make a repeat `intern register` fail as
+// matches on re-register and would make a repeat `tether register` fail as
 // a false name conflict. Derived from the parent process's pid+start time,
 // which is stable per shell and distinct across shells even under pid reuse.
 //
-// $INTERN_SESSION_ID wins only within this fallback: a harness detectHarness
+// $TETHER_SESSION_ID wins only within this fallback: a harness detectHarness
 // already recognises (one that reports its own session id) is not affected,
 // since this function is never called for it.
 func syntheticSessionID() string {

@@ -8,7 +8,7 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/praneethravuri/intern/internal/store"
+	"github.com/praneethravuri/tether/internal/store"
 )
 
 // Defaults for Config. Anything non-positive in a caller-supplied Config falls
@@ -161,7 +161,7 @@ func (c Config) withDefaults() Config {
 	return c
 }
 
-// Server serves the intern protocol over a unix socket, one goroutine per
+// Server serves the tether protocol over a unix socket, one goroutine per
 // reusable connection. Panics are recovered per request; internal failures
 // are logged in full but reported to clients as an opaque reference.
 type Server struct {

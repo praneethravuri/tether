@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/praneethravuri/intern/internal/protocol"
+	"github.com/praneethravuri/tether/internal/protocol"
 )
 
 func TestCallSendsTheRequestAndDecodesTheResult(t *testing.T) {
@@ -45,7 +45,7 @@ func TestCallWithoutADaemonExplainsHowToStartOne(t *testing.T) {
 		t.Fatalf("exit code = %d, want %d", got, exitNoDaemon)
 	}
 	requireContains(t, err.Error(), "no daemon running", "error")
-	requireContains(t, err.Error(), "intern", "error")
+	requireContains(t, err.Error(), "tether", "error")
 }
 
 func TestCallSurfacesDaemonErrorsWithTheirCode(t *testing.T) {

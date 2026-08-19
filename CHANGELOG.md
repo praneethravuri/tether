@@ -3,6 +3,18 @@
 All notable changes to this project are documented here. Format loosely
 follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [Unreleased]
+
+### Changed
+
+- Renamed the project from `intern` to `tether`: Go module path, binary,
+  CLI verb, GitHub repo, and bundled agent skill. This is a breaking change
+  with no compatibility shim — `INTERN_SOCK`, `INTERN_DB`,
+  `INTERN_WORKSPACE`, `INTERN_SESSION_ID`, and `INTERN_VERSION` become
+  `TETHER_SOCK`, `TETHER_DB`, `TETHER_WORKSPACE`, `TETHER_SESSION_ID`, and
+  `TETHER_VERSION`; the state directory moves from `~/.intern` to
+  `~/.tether`. Existing `~/.intern/intern.db` installations are not migrated.
+
 ## [0.3.2] - 2026-08-01
 
 ### Fixed

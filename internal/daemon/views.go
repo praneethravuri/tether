@@ -6,8 +6,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/praneethravuri/intern/internal/protocol"
-	"github.com/praneethravuri/intern/internal/store"
+	"github.com/praneethravuri/tether/internal/protocol"
+	"github.com/praneethravuri/tether/internal/store"
 )
 
 // fail turns any error into a Response. Store sentinels map to protocol

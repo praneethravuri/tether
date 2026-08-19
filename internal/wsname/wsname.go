@@ -1,4 +1,4 @@
-// Package wsname resolves a working directory to a intern workspace name,
+// Package wsname resolves a working directory to a tether workspace name,
 // derived from the repo's main root (worktrees included) so agents in the
 // same repo agree and same-named repos on different remotes do not collide.
 package wsname
@@ -13,12 +13,12 @@ import (
 )
 
 // EnvVar overrides workspace-name detection when set to a non-empty value.
-const EnvVar = "INTERN_WORKSPACE"
+const EnvVar = "TETHER_WORKSPACE"
 
 // gitEntry is the basename of git's shared repository directory.
 const gitEntry = ".git"
 
-// Resolve returns the workspace name for cwd: INTERN_WORKSPACE if set,
+// Resolve returns the workspace name for cwd: TETHER_WORKSPACE if set,
 // otherwise an identity derived from the git repo root, falling back to
 // cwd's own basename when cwd is not inside a git repo.
 func Resolve(cwd string) (string, error) {
