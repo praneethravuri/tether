@@ -150,7 +150,7 @@ type ClaimParams struct {
 	// short-lived CLI call), paired server-side with its start time so a
 	// recycled pid is never mistaken for the original holder.
 	OwnerPID int `json:"owner_pid"`
-	// Holder is a free-text label shown by intern claims. It is purely
+	// Holder is a free-text label shown by tether claims. It is purely
 	// diagnostic and never checked by release's logic.
 	Holder string `json:"holder,omitempty"`
 }

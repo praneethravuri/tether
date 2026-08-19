@@ -13,17 +13,17 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/praneethravuri/intern/internal/protocol"
+	"github.com/praneethravuri/tether/internal/protocol"
 )
 
 // The CLI cannot import internal/daemon, so these tests stand a fake daemon up on
-// a unix socket and point the CLI at it with INTERN_SOCK. That exercises the
+// a unix socket and point the CLI at it with TETHER_SOCK. That exercises the
 // real dial/encode/decode path while letting a test say exactly what comes
 // back, including responses no real daemon would ever send.
 
 // TestMain disables auto-start for the whole package: without this, any
 // "no daemon" test would exec the go test binary itself as if it were
-// intern. A test that wants to exercise auto-start overrides spawnDaemon
+// tether. A test that wants to exercise auto-start overrides spawnDaemon
 // locally via restoreSpawn.
 func TestMain(m *testing.M) {
 	spawnDaemon = func(string) error {
@@ -60,14 +60,14 @@ type fakeDaemon struct {
 	got []recorded
 }
 
-// newFakeDaemon starts a fake daemon, points INTERN_SOCK at it, and stops it
+// newFakeDaemon starts a fake daemon, points TETHER_SOCK at it, and stops it
 // when the test ends.
 func newFakeDaemon(t *testing.T, h handlerFunc) *fakeDaemon {
 	t.Helper()
 
 	// os.MkdirTemp rather than t.TempDir: a unix socket path is limited to
 	// about a hundred bytes and t.TempDir embeds the (long) test name.
-	dir, err := os.MkdirTemp("", "intern-cli")
+	dir, err := os.MkdirTemp("", "tether-cli")
 	if err != nil {
 		t.Fatalf("MkdirTemp: %v", err)
 	}
@@ -87,7 +87,7 @@ func newFakeDaemon(t *testing.T, h handlerFunc) *fakeDaemon {
 		_ = os.RemoveAll(dir)
 	})
 
-	t.Setenv("INTERN_SOCK", path)
+	t.Setenv("TETHER_SOCK", path)
 	return d
 }
 
@@ -221,7 +221,7 @@ func decodeParams[T any](t *testing.T, r recorded) T {
 // testAsIdentity is what setIdentity configures; run/mustRun apply it as
 // --as on any command that has the flag, so the ~100 existing call sites
 // that predate per-session identity resolution don't all need --as added
-// to their args now that $INTERN_NAME is gone.
+// to their args now that $TETHER_NAME is gone.
 var testAsIdentity string
 
 // setIdentity makes name and workspace resolution deterministic, so tests do
@@ -231,7 +231,7 @@ func setIdentity(t *testing.T, name, workspace string) {
 	prev := testAsIdentity
 	testAsIdentity = name
 	t.Cleanup(func() { testAsIdentity = prev })
-	t.Setenv("INTERN_WORKSPACE", workspace)
+	t.Setenv("TETHER_WORKSPACE", workspace)
 }
 
 // runOut is the outcome of executing one command.
@@ -307,10 +307,10 @@ func requireNotContains(t *testing.T, got, unwanted, what string) {
 // noDaemon points the CLI at a socket path nothing is listening on.
 func noDaemon(t *testing.T) {
 	t.Helper()
-	dir, err := os.MkdirTemp("", "intern-nodaemon")
+	dir, err := os.MkdirTemp("", "tether-nodaemon")
 	if err != nil {
 		t.Fatalf("MkdirTemp: %v", err)
 	}
 	t.Cleanup(func() { _ = os.RemoveAll(dir) })
-	t.Setenv("INTERN_SOCK", filepath.Join(dir, "sock"))
+	t.Setenv("TETHER_SOCK", filepath.Join(dir, "sock"))
 }

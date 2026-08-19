@@ -1,4 +1,4 @@
-// Package kind defines intern's message kinds: the shared vocabulary the
+// Package kind defines tether's message kinds: the shared vocabulary the
 // store and the CLI both validate against, without either depending on the
 // other's package -- the store needs no wire-protocol knowledge, and the
 // CLI needs no SQLite dependency just to know the four kind names.

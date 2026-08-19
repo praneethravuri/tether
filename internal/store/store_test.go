@@ -19,7 +19,7 @@ import (
 // newStore opens a throwaway database on disk (":memory:" would give each pool a separate DB).
 func newStore(t *testing.T) *Store {
 	t.Helper()
-	return openAt(t, filepath.Join(t.TempDir(), "intern.db"))
+	return openAt(t, filepath.Join(t.TempDir(), "tether.db"))
 }
 
 func openAt(t *testing.T, path string) *Store {
@@ -84,7 +84,7 @@ func note(body string) Message {
 
 func TestOpenIsIdempotent(t *testing.T) {
 	ctx := context.Background()
-	path := filepath.Join(t.TempDir(), "intern.db")
+	path := filepath.Join(t.TempDir(), "tether.db")
 
 	s1, err := Open(ctx, path)
 	if err != nil {

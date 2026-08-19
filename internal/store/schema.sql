@@ -1,4 +1,4 @@
--- intern schema v1. Applied on every daemon start, every statement idempotent.
+-- tether schema v1. Applied on every daemon start, every statement idempotent.
 -- Times are Unix milliseconds (INTEGER).
 
 CREATE TABLE IF NOT EXISTS agents (

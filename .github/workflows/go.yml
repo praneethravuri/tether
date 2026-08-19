@@ -135,7 +135,7 @@ jobs:
           openssl req -x509 -newkey rsa:2048 -nodes \
             -keyout "$RUNNER_TEMP/key.pem" -out "$RUNNER_TEMP/cert.pem" \
             -days 1 -subj "/CN=localhost"
-          sudo cp "$RUNNER_TEMP/cert.pem" /usr/local/share/ca-certificates/intern-install-e2e.crt
+          sudo cp "$RUNNER_TEMP/cert.pem" /usr/local/share/ca-certificates/tether-install-e2e.crt
           sudo update-ca-certificates
 
       - name: Serve the snapshot over https and run install.sh against it
@@ -164,5 +164,5 @@ jobs:
           done
 
           install_dir="$RUNNER_TEMP/install"
-          INTERN_BASE_URL="https://localhost:8443" INTERN_INSTALL_DIR="$install_dir" sh docs/install.sh
-          "$install_dir/intern" version
+          TETHER_BASE_URL="https://localhost:8443" TETHER_INSTALL_DIR="$install_dir" sh docs/install.sh
+          "$install_dir/tether" version

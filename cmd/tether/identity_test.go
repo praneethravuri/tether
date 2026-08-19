@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/praneethravuri/intern/internal/daemon"
+	"github.com/praneethravuri/tether/internal/daemon"
 )
 
 func TestResolveTarget(t *testing.T) {
@@ -220,8 +220,8 @@ func TestResolveSelf(t *testing.T) {
 		}
 	})
 
-	t.Run("workspace falls back to $INTERN_WORKSPACE", func(t *testing.T) {
-		t.Setenv("INTERN_WORKSPACE", "storefront")
+	t.Run("workspace falls back to $TETHER_WORKSPACE", func(t *testing.T) {
+		t.Setenv("TETHER_WORKSPACE", "storefront")
 
 		name, ws, err := resolveSelf("", "")
 		if err != nil {
@@ -237,7 +237,7 @@ func TestResolveSelf(t *testing.T) {
 		// the daemon resolves it against this session's existing
 		// registration or mints one -- resolveSelf itself no longer derives
 		// anything client-side.
-		t.Setenv("INTERN_WORKSPACE", "storefront")
+		t.Setenv("TETHER_WORKSPACE", "storefront")
 
 		name, ws, err := resolveSelf("", "")
 		if err != nil {
@@ -322,7 +322,7 @@ func TestHasControlByte(t *testing.T) {
 
 // -- M2: harness-less re-registration --------------------------------------
 
-// TestSyntheticSessionIDHonoursOverride is M2: $INTERN_SESSION_ID must win
+// TestSyntheticSessionIDHonoursOverride is M2: $TETHER_SESSION_ID must win
 // over the derived value whenever it is set, so a harness (or a test) that
 // already knows its own stable identity can supply it directly.
 func TestSyntheticSessionIDHonoursOverride(t *testing.T) {
@@ -345,7 +345,7 @@ func TestCurrentSessionForAgentKeepsExplicitOverride(t *testing.T) {
 // TestSyntheticSessionIDIsStableForThisProcess is M2's core guarantee:
 // repeated calls from what is effectively "the same shell" (the same test
 // process, calling twice) must return the same value, or a harness-less
-// `intern register --as X` run twice in a row would still look like two
+// `tether register --as X` run twice in a row would still look like two
 // different sessions and still fail with a conflict.
 func TestSyntheticSessionIDIsStableForThisProcess(t *testing.T) {
 	t.Setenv(envSessionOverride, "")
@@ -367,7 +367,7 @@ func TestSyntheticSessionIDIsStableForThisProcess(t *testing.T) {
 func TestAsIsNeverOverridden(t *testing.T) {
 	clearHarnessEnv(t)
 	t.Setenv(envSessionOverride, "session-a")
-	t.Setenv("INTERN_WORKSPACE", "storefront")
+	t.Setenv("TETHER_WORKSPACE", "storefront")
 
 	name, _, err := resolveSelf("explicit-name", "")
 	if err != nil {
@@ -379,7 +379,7 @@ func TestAsIsNeverOverridden(t *testing.T) {
 }
 
 func TestResolveWorkspaceUsesTheEnvironmentOverride(t *testing.T) {
-	t.Setenv("INTERN_WORKSPACE", "storefront")
+	t.Setenv("TETHER_WORKSPACE", "storefront")
 
 	ws, err := resolveWorkspace("")
 	if err != nil {

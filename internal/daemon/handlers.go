@@ -7,9 +7,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/praneethravuri/intern/internal/proc"
-	"github.com/praneethravuri/intern/internal/protocol"
-	"github.com/praneethravuri/intern/internal/store"
+	"github.com/praneethravuri/tether/internal/proc"
+	"github.com/praneethravuri/tether/internal/protocol"
+	"github.com/praneethravuri/tether/internal/store"
 )
 
 // handleRegister claims or refreshes a workspace/name for the caller.
@@ -57,7 +57,7 @@ func (s *Server) handleRegister(ctx context.Context, req protocol.Request, peerP
 		}
 	}
 
-	// peerPID is the short-lived intern CLI itself, not the shell pid a
+	// peerPID is the short-lived tether CLI itself, not the shell pid a
 	// client claims -- so what must hold is a shared session, not equality.
 	sessionPID := p.PID
 	switch {

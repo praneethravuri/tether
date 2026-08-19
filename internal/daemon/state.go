@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/praneethravuri/intern/internal/proc"
-	"github.com/praneethravuri/intern/internal/store"
+	"github.com/praneethravuri/tether/internal/proc"
+	"github.com/praneethravuri/tether/internal/store"
 )
 
 // stateReport is the computed, never-persisted answer for "what is this agent doing?"
@@ -16,7 +16,7 @@ type stateReport struct {
 	Detail string        // evidence included in the agent JSON result
 }
 
-// workingWindow is how recently an agent must have run a intern command to
+// workingWindow is how recently an agent must have run a tether command to
 // read as working rather than quiet.
 const workingWindow = 60 * time.Second
 
@@ -30,7 +30,7 @@ func computeState(a store.Agent, blocked bool, now time.Time) stateReport {
 	}
 	if blocked {
 		return stateReport{State: "blocked", Source: "wait", Age: 0,
-			Detail: "parked in intern wait"}
+			Detail: "parked in tether wait"}
 	}
 	if a.LastKind != "" {
 		age := now.Sub(a.LastSeen)
@@ -38,7 +38,7 @@ func computeState(a store.Agent, blocked bool, now time.Time) stateReport {
 		if age >= workingWindow {
 			state, verb = "quiet", "last ran"
 		}
-		detail := fmt.Sprintf("%s intern %s", verb, a.LastKind)
+		detail := fmt.Sprintf("%s tether %s", verb, a.LastKind)
 		return stateReport{State: state, Source: "heartbeat", Age: age, Detail: detail}
 	}
 	return stateReport{State: "unknown", Source: "registration", Age: now.Sub(a.RegisteredAt),

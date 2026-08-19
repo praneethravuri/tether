@@ -12,12 +12,12 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/praneethravuri/intern/internal/protocol"
+	"github.com/praneethravuri/tether/internal/protocol"
 )
 
 func TestRetainedCommandHelpStatesJSONIsDefault(t *testing.T) {
 	commands := map[string]func() *cobra.Command{
-		"intern": newRootCmd,
+		"tether": newRootCmd,
 		"send":   newSendCmd,
 		"inbox":  newInboxCmd,
 		"wait":   newWaitCmd,
@@ -242,21 +242,21 @@ func TestRetainedCommandsEmitJSONAndWireRequests(t *testing.T) {
 			},
 		},
 		{
-			name:      "bare intern",
+			name:      "bare tether",
 			build:     newRootCmd,
 			responses: map[string]any{protocol.MethodLs: protocol.LsResult{Agents: []protocol.AgentView{{Name: "sender", Workspace: workspace, Address: "sender@contract-workspace"}}}},
 			method:    protocol.MethodLs,
 			assertParam: func(t *testing.T, request recorded) {
 				params := decodeParams[protocol.LsParams](t, request)
 				if params.Workspace != workspace || params.Name != "" {
-					t.Fatalf("bare intern ls params = %+v", params)
+					t.Fatalf("bare tether ls params = %+v", params)
 				}
 			},
 			assertJSON: func(t *testing.T, output string) {
 				var result protocol.LsResult
 				unmarshalJSON(t, output, &result)
 				if len(result.Agents) != 1 || result.Agents[0].Name != "sender" {
-					t.Fatalf("bare intern result = %+v", result)
+					t.Fatalf("bare tether result = %+v", result)
 				}
 			},
 		},
@@ -340,9 +340,9 @@ func TestWaitRoundsPositiveDurationUpToOneMillisecond(t *testing.T) {
 }
 
 func TestDoctorReportsNoDaemonWhenSocketCannotResolve(t *testing.T) {
-	t.Setenv("INTERN_SOCK", "")
-	t.Setenv("INTERN_DB", "")
-	t.Setenv("INTERN_WORKSPACE", "doctor-workspace")
+	t.Setenv("TETHER_SOCK", "")
+	t.Setenv("TETHER_DB", "")
+	t.Setenv("TETHER_WORKSPACE", "doctor-workspace")
 	t.Setenv("XDG_RUNTIME_DIR", "")
 	t.Setenv("HOME", "")
 
@@ -356,7 +356,7 @@ func TestDoctorReportsNoDaemonWhenSocketCannotResolve(t *testing.T) {
 	if report.DaemonRunning {
 		t.Fatalf("doctor report = %+v, want daemon_running false", report)
 	}
-	requireContains(t, report.Error, "cannot work out where the intern socket lives", "doctor error")
+	requireContains(t, report.Error, "cannot work out where the tether socket lives", "doctor error")
 }
 
 func resultHandler(results map[string]any) handlerFunc {
@@ -370,7 +370,7 @@ func resultHandler(results map[string]any) handlerFunc {
 }
 
 func TestShellAgentsStaySeparate(t *testing.T) {
-	run := startTestIntern(t)
+	run := startTestTether(t)
 	workspace := "same-shell-workspace"
 
 	run("", "register", "sender", "--workspace", workspace)
@@ -385,7 +385,7 @@ func TestShellAgentsStaySeparate(t *testing.T) {
 }
 
 func TestShellHandoffIdentity(t *testing.T) {
-	run := startTestIntern(t)
+	run := startTestTether(t)
 	workspace := "plain-shell-handoff"
 
 	run("", "register", "sender", "--workspace", workspace)
@@ -415,7 +415,7 @@ func TestShellHandoffIdentity(t *testing.T) {
 // TestShellImplicitHandoff keeps the unnamed plain-shell session stable across
 // implicit registration and its real send, wait, and inbox requests.
 func TestShellImplicitHandoff(t *testing.T) {
-	run := startTestIntern(t)
+	run := startTestTether(t)
 	workspace := "implicit-shell-handoff"
 
 	run("", "register", "recipient", "--workspace", workspace)
@@ -457,7 +457,7 @@ func TestShellImplicitHandoff(t *testing.T) {
 }
 
 func TestRealProcessHandoff(t *testing.T) {
-	run := startTestIntern(t)
+	run := startTestTether(t)
 	workspace := "handoff-workspace"
 
 	var sender protocol.RegisterResult
@@ -494,19 +494,19 @@ func TestRealProcessHandoff(t *testing.T) {
 	}
 }
 
-func startTestIntern(t *testing.T) func(string, ...string) string {
+func startTestTether(t *testing.T) func(string, ...string) string {
 	t.Helper()
 	dir := t.TempDir()
-	binary := filepath.Join(dir, "intern")
+	binary := filepath.Join(dir, "tether")
 	// #nosec G204 -- the test controls the go tool and its temporary output path.
 	build := exec.Command("go", "build", "-o", binary, ".")
 	build.Env = os.Environ()
 	if output, err := build.CombinedOutput(); err != nil {
-		t.Fatalf("build intern binary: %v\n%s", err, output)
+		t.Fatalf("build tether binary: %v\n%s", err, output)
 	}
 
 	socket := filepath.Join(dir, "sock")
-	database := filepath.Join(dir, "intern.db")
+	database := filepath.Join(dir, "tether.db")
 	// #nosec G204 -- binary was built by this test in t.TempDir.
 	daemon := exec.Command(binary, "start")
 	daemon.Env = handoffEnv(socket, database, dir, "")
@@ -543,7 +543,7 @@ func startTestIntern(t *testing.T) func(string, ...string) string {
 		cmd.Env = handoffEnv(socket, database, dir, session)
 		output, err := cmd.CombinedOutput()
 		if err != nil {
-			t.Fatalf("intern %s: %v\n%s", strings.Join(args, " "), err, output)
+			t.Fatalf("tether %s: %v\n%s", strings.Join(args, " "), err, output)
 		}
 		return string(output)
 	}
@@ -551,10 +551,10 @@ func startTestIntern(t *testing.T) func(string, ...string) string {
 
 func handoffEnv(socket, database, home, session string) []string {
 	removed := map[string]bool{
-		"INTERN_SOCK":            true,
-		"INTERN_DB":              true,
-		"INTERN_WORKSPACE":       true,
-		"INTERN_SESSION_ID":      true,
+		"TETHER_SOCK":            true,
+		"TETHER_DB":              true,
+		"TETHER_WORKSPACE":       true,
+		"TETHER_SESSION_ID":      true,
 		"CLAUDE_CODE_SESSION_ID": true,
 		"CLAUDECODE":             true,
 		"GEMINI_SESSION_ID":      true,
@@ -572,9 +572,9 @@ func handoffEnv(socket, database, home, session string) []string {
 		}
 	}
 	return append(env,
-		"INTERN_SOCK="+socket,
-		"INTERN_DB="+database,
-		"INTERN_SESSION_ID="+session,
+		"TETHER_SOCK="+socket,
+		"TETHER_DB="+database,
+		"TETHER_SESSION_ID="+session,
 		"HOME="+home,
 	)
 }

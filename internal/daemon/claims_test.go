@@ -13,8 +13,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/praneethravuri/intern/internal/protocol"
-	"github.com/praneethravuri/intern/internal/store"
+	"github.com/praneethravuri/tether/internal/protocol"
+	"github.com/praneethravuri/tether/internal/store"
 )
 
 // spawnSleeper starts a short-lived real process and returns its pid, so a

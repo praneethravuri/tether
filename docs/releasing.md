@@ -1,6 +1,6 @@
-# Releasing intern
+# Releasing tether
 
-Intern releases are prepared manually from a green, merged `main` branch. The
+Tether releases are prepared manually from a green, merged `main` branch. The
 annotated release tag is the version source: GoReleaser injects it into the
 binary, so there is no source-file version to edit. Never move an existing
 release tag.
@@ -47,8 +47,8 @@ goreleaser release --snapshot --clean
 ```
 
 Also run the snapshot installer E2E. Serve its four archives and
-`checksums.txt` over trusted HTTPS, use `INTERN_BASE_URL` and a temporary
-`INTERN_INSTALL_DIR` with `docs/install.sh`, then run the installed binary’s
+`checksums.txt` over trusted HTTPS, use `TETHER_BASE_URL` and a temporary
+`TETHER_INSTALL_DIR` with `docs/install.sh`, then run the installed binary’s
 `version` command. The `install-e2e` job in [Go CI](../.github/workflows/go.yml)
 is the canonical, executable form of that check.
 
@@ -113,8 +113,8 @@ checksum, then install the tagged release:
 
 ```sh
 RELEASE_DIR=$(mktemp -d)
-gh release download "$VERSION" --repo praneethravuri/intern \
-  --pattern 'intern_*.tar.gz' --pattern checksums.txt --dir "$RELEASE_DIR"
+gh release download "$VERSION" --repo praneethravuri/tether \
+  --pattern 'tether_*.tar.gz' --pattern checksums.txt --dir "$RELEASE_DIR"
 
 (
   cd "$RELEASE_DIR"
@@ -126,8 +126,8 @@ gh release download "$VERSION" --repo praneethravuri/intern \
 )
 
 INSTALL_DIR="$RELEASE_DIR/install"
-INTERN_VERSION="$VERSION" INTERN_INSTALL_DIR="$INSTALL_DIR" sh docs/install.sh
-test "$("$INSTALL_DIR/intern" version)" = "$VERSION"
+TETHER_VERSION="$VERSION" TETHER_INSTALL_DIR="$INSTALL_DIR" sh docs/install.sh
+test "$("$INSTALL_DIR/tether" version)" = "$VERSION"
 ```
 
 All four checksums must validate and the installed binary must print exactly

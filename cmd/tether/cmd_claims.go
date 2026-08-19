@@ -3,7 +3,7 @@ package main
 import (
 	"github.com/spf13/cobra"
 
-	"github.com/praneethravuri/intern/internal/protocol"
+	"github.com/praneethravuri/tether/internal/protocol"
 )
 
 const claimsLong = `List claims in this workspace: who holds what, and whether it's still live.
@@ -11,7 +11,7 @@ Use --all to list every workspace; it ignores --workspace.
 
 STATUS is computed fresh on every call: held (owner alive, TTL not elapsed),
 expired (TTL elapsed), or gone (owner process no longer alive) -- the same
-self-healing check ` + "`intern ls`" + ` uses for agent presence.
+self-healing check ` + "`tether ls`" + ` uses for agent presence.
 
 Output is JSON by default.`
 
@@ -27,8 +27,8 @@ func newClaimsCmd() *cobra.Command {
 		Use:   "claims",
 		Short: "List claims and who holds them",
 		Long:  claimsLong,
-		Example: "  intern claims\n" +
-			"  intern claims --all",
+		Example: "  tether claims\n" +
+			"  tether claims --all",
 		Args: cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return runClaims(cmd, &opts)

@@ -12,9 +12,9 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/praneethravuri/intern/internal/proc"
-	"github.com/praneethravuri/intern/internal/protocol"
-	"github.com/praneethravuri/intern/internal/store"
+	"github.com/praneethravuri/tether/internal/proc"
+	"github.com/praneethravuri/tether/internal/protocol"
+	"github.com/praneethravuri/tether/internal/store"
 )
 
 // Serve accepts connections until ctx is cancelled or the listener fails. On
@@ -22,7 +22,7 @@ import (
 // ShutdownTimeout, then returns once all goroutines have stopped.
 func (s *Server) Serve(ctx context.Context, ln net.Listener) error {
 	if ln == nil {
-		return errors.New("intern: nil listener")
+		return errors.New("tether: nil listener")
 	}
 
 	ctx, cancel := context.WithCancel(ctx)

@@ -7,7 +7,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/praneethravuri/intern/internal/protocol"
+	"github.com/praneethravuri/tether/internal/protocol"
 )
 
 func TestVersion(t *testing.T) {
@@ -129,12 +129,12 @@ func TestUnknownFlagListsValidFlags(t *testing.T) {
 }
 
 // TestUnknownFlagOnCommandsWithNoCustomFlags covers the commands that
-// register nothing of their own: bare intern, start, and version. cobra
+// register nothing of their own: bare tether, start, and version. cobra
 // always adds --help by the time flags are parsed, so that is what the
 // error lists -- not an empty "(none)" that would contradict --help working.
 func TestUnknownFlagOnCommandsWithNoCustomFlags(t *testing.T) {
 	cmds := map[string]func() *cobra.Command{
-		"intern":  newRootCmd,
+		"tether":  newRootCmd,
 		"start":   newStartCmd,
 		"version": newVersionCmd,
 	}

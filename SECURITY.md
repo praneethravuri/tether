@@ -9,7 +9,7 @@
 
 ## Supported Versions
 
-Intern is currently in active development. Security updates are provided for the latest release branch.
+Tether is currently in active development. Security updates are provided for the latest release branch.
 
 | Version | Supported          |
 | ------- | ------------------ |
@@ -18,7 +18,7 @@ Intern is currently in active development. Security updates are provided for the
 
 ## Reporting a Vulnerability
 
-If you discover a security vulnerability in Intern, please report it immediately to help keep this project secure.
+If you discover a security vulnerability in Tether, please report it immediately to help keep this project secure.
 
 **Please do not report security vulnerabilities via public GitHub issues.**
 
@@ -29,4 +29,4 @@ In your report, please include:
 2. Steps to reproduce the issue (including any proof-of-concept scripts or commands).
 3. The potential impact of the vulnerability.
 
-We will acknowledge receipt of your report within 48 hours and work with you to coordinate a security release to address the issue. Thank you for helping keep Intern secure!
+We will acknowledge receipt of your report within 48 hours and work with you to coordinate a security release to address the issue. Thank you for helping keep Tether secure!

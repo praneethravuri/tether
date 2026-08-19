@@ -7,8 +7,8 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/praneethravuri/intern/internal/kind"
-	"github.com/praneethravuri/intern/internal/protocol"
+	"github.com/praneethravuri/tether/internal/kind"
+	"github.com/praneethravuri/tether/internal/protocol"
 )
 
 // Message kinds are advisory only, re-exported from internal/kind so every
@@ -32,7 +32,7 @@ expand it).
 
 The body can be the second positional argument, but pass it with --body-file
 whenever it contains quotes, backticks, newlines or $ — the shell will
-otherwise mangle it before intern ever sees it. Use --body-file - to read the
+otherwise mangle it before tether ever sees it. Use --body-file - to read the
 body from stdin. What is read is sent byte for byte, with no trimming.
 
 Kinds: note (default), handoff, question, answer. Use --reply-to <message-id>
@@ -54,12 +54,12 @@ func newSendCmd() *cobra.Command {
 		Use:   "send <to> [body]",
 		Short: "Send a message to another agent",
 		Long:  sendLong,
-		Example: "  intern send backend \"the API contract changed\"\n" +
-			"  intern send backend@storefront --kind handoff --body-file notes.md\n" +
-			"  cat report.txt | intern send reviewer --body-file -\n" +
-			"  intern send frontend --kind answer --reply-to 01K1QW8Z3M4T7V9XBCDEF2GH --body-file -\n" +
-			"  intern send '*' \"heads up, deploying in 5\"\n" +
-			"  intern send all \"heads up, deploying in 5\"",
+		Example: "  tether send backend \"the API contract changed\"\n" +
+			"  tether send backend@storefront --kind handoff --body-file notes.md\n" +
+			"  cat report.txt | tether send reviewer --body-file -\n" +
+			"  tether send frontend --kind answer --reply-to 01K1QW8Z3M4T7V9XBCDEF2GH --body-file -\n" +
+			"  tether send '*' \"heads up, deploying in 5\"\n" +
+			"  tether send all \"heads up, deploying in 5\"",
 		Args: cobra.RangeArgs(1, 2),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return runSend(cmd, args, &opts)

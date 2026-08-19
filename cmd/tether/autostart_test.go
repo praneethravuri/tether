@@ -10,7 +10,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/praneethravuri/intern/internal/protocol"
+	"github.com/praneethravuri/tether/internal/protocol"
 )
 
 // shortSockDir is a temp dir short enough for a unix socket path -- unlike
@@ -93,7 +93,7 @@ func TestDialReportsASpawnThatFails(t *testing.T) {
 		t.Fatal("dial succeeded even though spawnDaemon failed")
 	}
 	requireContains(t, err.Error(), "boom", "error")
-	requireContains(t, err.Error(), "intern", "error")
+	requireContains(t, err.Error(), "tether", "error")
 	if got := exitCodeFor(err); got != exitNoDaemon {
 		t.Fatalf("exit code = %d, want %d", got, exitNoDaemon)
 	}
@@ -114,7 +114,7 @@ func restoreSpawn(t *testing.T, fn func(string) error) {
 // (not a daemon-side error) and time remains.
 func TestWaitReconnectsAfterATransportFailure(t *testing.T) {
 	sock := filepath.Join(shortSockDir(t), "sock")
-	t.Setenv("INTERN_SOCK", sock)
+	t.Setenv("TETHER_SOCK", sock)
 
 	ln, err := net.Listen("unix", sock)
 	if err != nil {

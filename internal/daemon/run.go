@@ -1,5 +1,5 @@
-// Package daemon runs the intern daemon: the socket listener, SQLite-backed
-// message bus, and background sweep that cmd/intern serves in the foreground
+// Package daemon runs the tether daemon: the socket listener, SQLite-backed
+// message bus, and background sweep that cmd/tether serves in the foreground
 // when invoked with no arguments.
 package daemon
 
@@ -13,8 +13,8 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/praneethravuri/intern/internal/protocol"
-	"github.com/praneethravuri/intern/internal/store"
+	"github.com/praneethravuri/tether/internal/protocol"
+	"github.com/praneethravuri/tether/internal/store"
 )
 
 // ErrAlreadyRunning marks every "a daemon already holds this socket" failure

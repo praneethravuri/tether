@@ -4,9 +4,9 @@ version: 2
 # main.version gets the "v" prefix back so a release binary and a `git describe`
 # local build report the same shape.
 builds:
-  - id: intern
-    main: ./cmd/intern
-    binary: intern
+  - id: tether
+    main: ./cmd/tether
+    binary: tether
     env: [CGO_ENABLED=0]
     flags: [-trimpath]
     ldflags: -s -w -X main.version=v{{ .Version }}
@@ -19,8 +19,8 @@ builds:
 # the stable /releases/latest/download/ and /releases/download/<tag>/ URLs
 # with no GitHub API call.
 archives:
-  - id: intern
-    name_template: "intern_{{ .Os }}_{{ .Arch }}"
+  - id: tether
+    name_template: "tether_{{ .Os }}_{{ .Arch }}"
     formats: [tar.gz]
     files: [LICENSE, README.md]
 

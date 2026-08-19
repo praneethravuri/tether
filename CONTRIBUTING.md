@@ -1,6 +1,6 @@
 # Contributing
 
-Intern is a local daemon and SQLite-backed coordination tool for coding
+Tether is a local daemon and SQLite-backed coordination tool for coding
 agents. Keep changes small, preserve the CLI's JSON-first contract, and avoid
 adding commands, flags, or persistent state without a concrete workflow that
 needs them.
@@ -39,7 +39,7 @@ check.
 - Add or update focused tests for the retained behavior you change. The test
   suite uses the Go standard library; do not add a test framework casually.
 - Keep command help, [`README.md`](README.md), and
-  [`skills/intern/SKILL.md`](skills/intern/SKILL.md) in sync with the actual
+  [`skills/tether/SKILL.md`](skills/tether/SKILL.md) in sync with the actual
   Cobra command surface.
 - Include a real CLI transcript for behavior changes. JSON output should make
   the request and result easy to inspect.
@@ -52,8 +52,8 @@ and Dependabot cover dependency hygiene.
 
 ## Reporting a bug
 
-Open an issue with the output of `intern version`, your OS and architecture,
+Open an issue with the output of `tether version`, your OS and architecture,
 and the smallest command sequence that reproduces the problem. Include
-`intern doctor` output when the issue involves the daemon or local state.
+`tether doctor` output when the issue involves the daemon or local state.
 For a suspected security issue, contact the maintainer privately instead of
 opening a public issue.
