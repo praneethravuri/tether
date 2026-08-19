@@ -2074,9 +2074,9 @@ func TestStripControlLeavesLengthAndOrdinaryTextAlone(t *testing.T) {
 }
 
 // TestRegisterSanitisesMetadata is H1: harness, cwd and session_id are
-// client-controlled strings that reach every `tether who`/`status`/`doctor`
-// call for that agent, so a control byte in any of them must be neutralised
-// before it is stored, not merely at render time.
+// client-controlled strings that reach every `tether ls`/`doctor` call for
+// that agent, so a control byte in any of them must be neutralised before it
+// is stored, not merely at render time.
 func TestRegisterSanitisesMetadata(t *testing.T) {
 	ts := newTestServer(t, nil)
 	c := ts.dial()
