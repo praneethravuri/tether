@@ -1,6 +1,6 @@
 # tether
 
-`tether` is a local message bus for coding agents working on the same machine.
+`tether` is a local AI agent coordination layer for coding agents working on the same machine.
 Agents register a workspace-scoped name, exchange durable messages, wait for
 new mail without polling, and claim files while they work. A small daemon owns
 the local Unix socket and a per-user SQLite database; daemon-facing commands

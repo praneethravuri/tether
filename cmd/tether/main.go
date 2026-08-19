@@ -124,7 +124,7 @@ func main() {
 	os.Exit(exitCodeFor(err))
 }
 
-const rootLong = `tether is a local message bus for coding agents.
+const rootLong = `tether is a local AI agent coordination layer for coding agents.
 
 Agents register a name inside a workspace derived from the shared Git root
 (or the current directory outside Git), unless $TETHER_WORKSPACE overrides it.
@@ -160,7 +160,7 @@ Exit codes:
 func newRootCmd() *cobra.Command {
 	root := &cobra.Command{
 		Use:           "tether",
-		Short:         "Local message bus for coding agents",
+		Short:         "Local AI agent coordination layer for coding agents",
 		Long:          rootLong,
 		SilenceUsage:  true,
 		SilenceErrors: true,
