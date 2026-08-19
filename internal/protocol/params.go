@@ -191,12 +191,14 @@ type ClaimsParams struct {
 }
 
 // ClaimView describes one claim. Status is computed fresh on every query,
-// never persisted, mirroring AgentView's State.
+// never persisted, mirroring AgentView's State. LeaseID is returned so the
+// holder can release it; empty for claims the caller does not own.
 type ClaimView struct {
 	Workspace string `json:"workspace"`
 	Key       string `json:"key"`
 	OwnerPID  int    `json:"owner_pid"`
 	Holder    string `json:"holder,omitempty"`
+	LeaseID   string `json:"lease_id,omitempty"`
 	// Status is one of held (owner alive, TTL not elapsed), expired (TTL
 	// elapsed), or gone (owner process no longer alive).
 	Status    string `json:"status"`

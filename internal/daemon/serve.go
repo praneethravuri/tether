@@ -375,7 +375,7 @@ func (s *Server) dispatch(ctx context.Context, req protocol.Request, pid int) (r
 	case protocol.MethodRelease:
 		return s.handleRelease(ctx, req)
 	case protocol.MethodClaims:
-		return s.handleClaims(ctx, req)
+		return s.handleClaims(ctx, req, pid)
 	default:
 		return protocol.Fail(req.ID, protocol.CodeBadRequest, "unknown method: "+clip(req.Method))
 	}

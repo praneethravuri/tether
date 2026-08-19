@@ -104,8 +104,10 @@ func agentView(a store.Agent, sr stateReport, pending int) protocol.AgentView {
 }
 
 // claimView renders one claim plus its freshly computed status for the wire.
-func claimView(c store.Claim, now time.Time) protocol.ClaimView {
-	return protocol.ClaimView{
+// LeaseID is included only when the caller is the claim's owner (same pid),
+// since a lease id is a release capability.
+func claimView(c store.Claim, now time.Time, callerPID int) protocol.ClaimView {
+	v := protocol.ClaimView{
 		Workspace: c.Workspace,
 		Key:       c.Key,
 		OwnerPID:  c.OwnerPID,
@@ -114,4 +116,8 @@ func claimView(c store.Claim, now time.Time) protocol.ClaimView {
 		LeasedAt:  formatTime(c.LeasedAt),
 		ExpiresAt: formatTime(c.ExpiresAt),
 	}
+	if callerPID > 0 && callerPID == c.OwnerPID {
+		v.LeaseID = c.LeaseID
+	}
+	return v
 }

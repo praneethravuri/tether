@@ -729,8 +729,9 @@ func (s *Server) handleRelease(ctx context.Context, req protocol.Request) protoc
 	return protocol.OK(req.ID, protocol.ReleaseResult{})
 }
 
-// handleClaims lists claims, each with a freshly computed status.
-func (s *Server) handleClaims(ctx context.Context, req protocol.Request) protocol.Response {
+// handleClaims lists claims, each with a freshly computed status. The caller
+// sees the lease id for claims it owns (same pid) so it can release them.
+func (s *Server) handleClaims(ctx context.Context, req protocol.Request, peerPID int) protocol.Response {
 	var p protocol.ClaimsParams
 	if err := decodeParams(req, &p); err != nil {
 		return s.fail(req.ID, err, "claims")
@@ -745,7 +746,7 @@ func (s *Server) handleClaims(ctx context.Context, req protocol.Request) protoco
 	now := time.Now()
 	views := make([]protocol.ClaimView, 0, len(claims))
 	for _, c := range claims {
-		views = append(views, claimView(c, now))
+		views = append(views, claimView(c, now, peerPID))
 	}
 	return protocol.OK(req.ID, protocol.ClaimsResult{Claims: views})
 }
