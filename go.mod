@@ -5,7 +5,7 @@ go 1.26
 require (
 	github.com/oklog/ulid/v2 v2.1.2
 	github.com/spf13/cobra v1.10.2
-	github.com/spf13/pflag v1.0.9
+	github.com/spf13/pflag v1.0.10
 	golang.org/x/sys v0.47.0
 	modernc.org/sqlite v1.54.0
 )
