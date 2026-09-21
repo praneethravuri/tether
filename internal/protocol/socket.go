@@ -9,14 +9,14 @@ import (
 )
 
 // SocketPath resolves where the socket should live based on the hierarchy
-// INTERN_SOCK, then $XDG_RUNTIME_DIR/intern/sock, then ~/.intern/sock.
+// TETHER_SOCK, then $XDG_RUNTIME_DIR/tether/sock, then ~/.tether/sock.
 func SocketPath() (string, error) {
-	if sock := os.Getenv("INTERN_SOCK"); sock != "" {
+	if sock := os.Getenv("TETHER_SOCK"); sock != "" {
 		return sock, nil
 	}
 
 	if xdg := os.Getenv("XDG_RUNTIME_DIR"); xdg != "" {
-		return filepath.Join(xdg, "intern", "sock"), nil
+		return filepath.Join(xdg, "tether", "sock"), nil
 	}
 
 	home, err := os.UserHomeDir()
@@ -24,14 +24,14 @@ func SocketPath() (string, error) {
 		return "", fmt.Errorf("could not find home dir: %w", err)
 	}
 
-	return filepath.Join(home, ".intern", "sock"), nil
+	return filepath.Join(home, ".tether", "sock"), nil
 }
 
-// DBPath resolves where the sqlite database should live: INTERN_DB if set,
-// otherwise ~/.intern/intern.db. The ~/.intern directory is created with 0700
+// DBPath resolves where the sqlite database should live: TETHER_DB if set,
+// otherwise ~/.tether/tether.db. The ~/.tether directory is created with 0700
 // so the message store is only readable by its owner.
 func DBPath() (string, error) {
-	if db := os.Getenv("INTERN_DB"); db != "" {
+	if db := os.Getenv("TETHER_DB"); db != "" {
 		return db, nil
 	}
 
@@ -40,15 +40,15 @@ func DBPath() (string, error) {
 		return "", fmt.Errorf("could not find home dir: %w", err)
 	}
 
-	dir := filepath.Join(home, ".intern")
+	dir := filepath.Join(home, ".tether")
 	if err := os.MkdirAll(dir, 0o700); err != nil {
 		return "", fmt.Errorf("mkdir: %w", err)
 	}
 
-	return filepath.Join(dir, "intern.db"), nil
+	return filepath.Join(dir, "tether.db"), nil
 }
 
-// LogPath resolves where the daemon's log lives: ~/.intern/daemon.log. This
+// LogPath resolves where the daemon's log lives: ~/.tether/daemon.log. This
 // is the file every bug report starts with, so its location never varies
 // with how the daemon was started.
 func LogPath() (string, error) {
@@ -57,7 +57,7 @@ func LogPath() (string, error) {
 		return "", fmt.Errorf("could not find home dir: %w", err)
 	}
 
-	dir := filepath.Join(home, ".intern")
+	dir := filepath.Join(home, ".tether")
 	if err := os.MkdirAll(dir, 0o700); err != nil {
 		return "", fmt.Errorf("mkdir: %w", err)
 	}

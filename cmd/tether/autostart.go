@@ -8,7 +8,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/praneethravuri/intern/internal/protocol"
+	"github.com/praneethravuri/tether/internal/protocol"
 )
 
 const (
@@ -68,7 +68,7 @@ func autoStartDaemon(sock string) error {
 }
 
 // dialableWithin polls sock until something accepts a connection or timeout
-// elapses. Shared by auto-start and by `intern demo`'s own isolated daemon.
+// elapses.
 func dialableWithin(sock string, timeout time.Duration) bool {
 	deadline := time.Now().Add(timeout)
 	for time.Now().Before(deadline) {

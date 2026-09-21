@@ -1,6 +1,6 @@
 ---
 name: Feature request
-about: Suggest something intern doesn't do yet
+about: Suggest something tether doesn't do yet
 labels: enhancement
 ---
 

@@ -8,13 +8,13 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/praneethravuri/intern/internal/protocol"
+	"github.com/praneethravuri/tether/internal/protocol"
 )
 
 const registerLong = `Register this agent with the daemon so other agents can address it.
 
 The name is claimed inside a workspace derived from the shared Git root of
-the current directory unless --workspace or $INTERN_WORKSPACE says otherwise.
+the current directory unless --workspace or $TETHER_WORKSPACE says otherwise.
 Other agents then reach you at name@workspace.
 
 Every other command registers implicitly before its real request, so running
@@ -37,8 +37,8 @@ func newRegisterCmd() *cobra.Command {
 		Use:   "register [name]",
 		Short: "Register this agent so others can reach it",
 		Long:  registerLong,
-		Example: "  intern register frontend\n" +
-			"  intern register backend --workspace storefront",
+		Example: "  tether register frontend\n" +
+			"  tether register backend --workspace storefront",
 		Args: cobra.MaximumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return runRegister(cmd, args, &opts)
@@ -95,7 +95,7 @@ func registerError(name, workspace string, err error) error {
 		return fail(exitConflict, fmt.Errorf(
 			"cannot register %s: %s\n"+
 				"       the name is held by a live agent — pick a different name, "+
-				"or run `intern ls` to see who holds it",
+				"or run `tether ls` to see who holds it",
 			address(name, workspace), sanitizeTerminal(pe.Message)))
 	}
 	return err

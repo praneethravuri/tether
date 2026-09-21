@@ -38,8 +38,8 @@ codeDocs/
 *.log
 
 # Build artifact (root-level only -- unanchored would also match the
-# cmd/intern source directory)
-/intern
+# cmd/tether source directory)
+/tether
 
 # Cross-compilation output from `make cross`
 /dist/
@@ -51,11 +51,11 @@ codeDocs/
 # Files a FUSE mount leaves behind when an open file is deleted
 .fuse_hidden*
 
-# Local intern state: the message store, plus SQLite's WAL sidecars
+# Local tether state: the message store, plus SQLite's WAL sidecars
 *.db
 *.db-wal
 *.db-shm
-.intern/
+.tether/
 
 # macOS
 .DS_Store

@@ -34,8 +34,8 @@ func runGitT(t *testing.T, dir string, args ...string) {
 	cmd := exec.Command("git", args...)
 	cmd.Dir = dir
 	cmd.Env = append(os.Environ(),
-		"GIT_AUTHOR_NAME=intern-test", "GIT_AUTHOR_EMAIL=intern-test@example.com",
-		"GIT_COMMITTER_NAME=intern-test", "GIT_COMMITTER_EMAIL=intern-test@example.com",
+		"GIT_AUTHOR_NAME=tether-test", "GIT_AUTHOR_EMAIL=tether-test@example.com",
+		"GIT_COMMITTER_NAME=tether-test", "GIT_COMMITTER_EMAIL=tether-test@example.com",
 	)
 	if out, err := cmd.CombinedOutput(); err != nil {
 		t.Fatalf("git %s (in %s): %v\n%s", strings.Join(args, " "), dir, err, out)
@@ -51,8 +51,8 @@ func initRepo(t *testing.T, dir string) {
 		t.Fatalf("MkdirAll(%q): %v", dir, err)
 	}
 	runGitT(t, dir, "init", "-q", "-b", "main")
-	runGitT(t, dir, "config", "user.email", "intern-test@example.com")
-	runGitT(t, dir, "config", "user.name", "intern-test")
+	runGitT(t, dir, "config", "user.email", "tether-test@example.com")
+	runGitT(t, dir, "config", "user.name", "tether-test")
 	if err := os.WriteFile(filepath.Join(dir, "README"), []byte("x"), 0o600); err != nil {
 		t.Fatalf("WriteFile: %v", err)
 	}

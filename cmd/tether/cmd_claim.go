@@ -7,13 +7,13 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/praneethravuri/intern/internal/protocol"
+	"github.com/praneethravuri/tether/internal/protocol"
 )
 
 const claimLong = `Claim exclusive ownership of a key (typically a file path) within a workspace.
 
 A claim belongs to the calling process, not to any registered agent name --
-identified by pid and start time, the same self-healing pairing intern uses
+identified by pid and start time, the same self-healing pairing tether uses
 for presence. Running this again from the same live process renews the
 claim and mints a fresh lease id; a claim whose process has died can be
 reclaimed by anyone immediately, without waiting for its TTL to elapse.
@@ -33,8 +33,8 @@ func newClaimCmd() *cobra.Command {
 		Use:   "claim <key>",
 		Short: "Claim exclusive ownership of a key in this workspace",
 		Long:  claimLong,
-		Example: "  intern claim src/main.go\n" +
-			"  intern claim src/main.go --holder \"refactoring auth\"",
+		Example: "  tether claim src/main.go\n" +
+			"  tether claim src/main.go --holder \"refactoring auth\"",
 		Args: cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return runClaim(cmd, args[0], &opts)
@@ -43,7 +43,7 @@ func newClaimCmd() *cobra.Command {
 
 	opts.addWorkspace(cmd)
 	cmd.Flags().StringVar(&opts.holder, "holder", "",
-		"free-text label shown by intern claims (e.g. \"refactoring auth\")")
+		"free-text label shown by tether claims (e.g. \"refactoring auth\")")
 
 	return quiet(cmd)
 }
@@ -78,7 +78,7 @@ func claimError(key, workspace string, err error) error {
 		_ = errors.As(err, &pe)
 		return fail(exitConflict, fmt.Errorf(
 			"cannot claim %s in %s: %s\n"+
-				"       the key is held by a live process — run `intern claims` to see who, "+
+				"       the key is held by a live process — run `tether claims` to see who, "+
 				"or wait for it to be released",
 			key, workspace, sanitizeTerminal(pe.Message)))
 	}

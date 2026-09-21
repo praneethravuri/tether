@@ -16,8 +16,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/praneethravuri/intern/internal/protocol"
-	"github.com/praneethravuri/intern/internal/store"
+	"github.com/praneethravuri/tether/internal/protocol"
+	"github.com/praneethravuri/tether/internal/store"
 )
 
 // fakeClock is a mutex-guarded fake clock so tests can fast-forward past
@@ -46,7 +46,7 @@ func (c *fakeClock) advance(d time.Duration) {
 // -- harness ----------------------------------------------------------------
 
 // testServer is a real Server on a real unix socket, driven over the wire.
-// Nothing here imports cmd/intern: the daemon is exercised exactly as an
+// Nothing here imports cmd/tether: the daemon is exercised exactly as an
 // arbitrary client would exercise it.
 type testServer struct {
 	t      *testing.T
@@ -2074,9 +2074,9 @@ func TestStripControlLeavesLengthAndOrdinaryTextAlone(t *testing.T) {
 }
 
 // TestRegisterSanitisesMetadata is H1: harness, cwd and session_id are
-// client-controlled strings that reach every `intern who`/`status`/`doctor`
-// call for that agent, so a control byte in any of them must be neutralised
-// before it is stored, not merely at render time.
+// client-controlled strings that reach every `tether ls`/`doctor` call for
+// that agent, so a control byte in any of them must be neutralised before it
+// is stored, not merely at render time.
 func TestRegisterSanitisesMetadata(t *testing.T) {
 	ts := newTestServer(t, nil)
 	c := ts.dial()

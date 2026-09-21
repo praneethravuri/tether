@@ -7,14 +7,14 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/praneethravuri/intern/internal/daemon"
-	"github.com/praneethravuri/intern/internal/protocol"
+	"github.com/praneethravuri/tether/internal/daemon"
+	"github.com/praneethravuri/tether/internal/protocol"
 )
 
 const startLong = `Run the daemon in the foreground: blocks, logs to the terminal, stops on
 Ctrl-C.
 
-Daemon-facing commands other than ` + "`intern doctor`" + ` run this automatically,
+Daemon-facing commands other than ` + "`tether doctor`" + ` run this automatically,
 detached, when they need a daemon and none is reachable. Run it directly to
 watch the daemon's own log output, or to control its lifetime yourself.`
 
@@ -36,13 +36,13 @@ func newStartCmd() *cobra.Command {
 // pure function so its wording is testable without starting a real daemon.
 func daemonBanner(sock, db string) string {
 	return fmt.Sprintf(
-		"intern: running the daemon in the foreground (Ctrl-C to stop)\n"+
-			"intern: socket %s · db %s\n"+
-			"intern: for the fleet view, run `intern ls`\n",
+		"tether: running the daemon in the foreground (Ctrl-C to stop)\n"+
+			"tether: socket %s · db %s\n"+
+			"tether: for the fleet view, run `tether ls`\n",
 		sock, db)
 }
 
-// runDaemon is `intern start`'s RunE.
+// runDaemon is `tether start`'s RunE.
 func runDaemon(cmd *cobra.Command) error {
 	sock, err := protocol.SocketPath()
 	if err != nil {
@@ -58,7 +58,7 @@ func runDaemon(cmd *cobra.Command) error {
 	}
 
 	log.SetFlags(log.LstdFlags | log.Lmsgprefix)
-	log.SetPrefix("intern: ")
+	log.SetPrefix("tether: ")
 
 	return daemonRunErr(daemon.Run())
 }

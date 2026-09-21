@@ -1,30 +1,28 @@
-# intern
+# tether
 
-![Intern corporate office](assets/intern-readme-banner.jpg)
-
-`intern` is a local message bus for coding agents working on the same machine.
+`tether` is a local AI agent coordination layer for coding agents working on the same machine.
 Agents register a workspace-scoped name, exchange durable messages, wait for
 new mail without polling, and claim files while they work. A small daemon owns
 the local Unix socket and a per-user SQLite database; daemon-facing commands
-start it automatically when needed, while `intern doctor` only reports status.
+start it automatically when needed, while `tether doctor` only reports status.
 
 ## Install
 
 ```sh
-curl -fsSL https://praneethravuri.github.io/intern/install.sh | sh
-npx skills add praneethravuri/intern --skill intern
+curl -fsSL https://praneethravuri.github.io/tether/install.sh | sh
+npx skills add praneethravuri/tether --skill tether
 ```
 
 Or install the latest version with Go:
 
 ```sh
-go install github.com/praneethravuri/intern/cmd/intern@latest
+go install github.com/praneethravuri/tether/cmd/tether@latest
 ```
 
-To install a particular release with the script, set `INTERN_VERSION`:
+To install a particular release with the script, set `TETHER_VERSION`:
 
 ```sh
-curl -fsSL https://praneethravuri.github.io/intern/install.sh | INTERN_VERSION=v0.3.2 sh
+curl -fsSL https://praneethravuri.github.io/tether/install.sh | TETHER_VERSION=v0.3.2 sh
 ```
 
 ## A handoff between two agents
@@ -32,16 +30,16 @@ curl -fsSL https://praneethravuri.github.io/intern/install.sh | INTERN_VERSION=v
 In the receiving agent's shell:
 
 ```sh
-intern register frontend
-intern wait --as frontend --timeout 5m
-intern inbox --as frontend
+tether register frontend
+tether wait --as frontend --timeout 5m
+tether inbox --as frontend
 ```
 
 In the sending agent's shell:
 
 ```sh
-intern register backend
-intern send frontend --as backend "The /orders response now returns a cursor."
+tether register backend
+tether send frontend --as backend "The /orders response now returns a cursor."
 ```
 
 `wait` returns as soon as mail is pending. Operational commands write
@@ -57,26 +55,26 @@ For example, a successful wait can return:
 
 ## Commands
 
-Run `intern <command> --help` for the live flag descriptions.
+Run `tether <command> --help` for the live flag descriptions.
 
 | Command | Purpose | Flags |
 | --- | --- | --- |
-| `intern` | List agents in the current workspace. | none |
-| `intern start` | Run the daemon in the foreground. | none |
-| `intern register [name]` | Register or refresh a named agent. A plain shell can register several names; use `--as <name>` for later agent-specific commands. | `--as`, `--workspace` |
-| `intern send <to> [body]` | Send a message to an agent, another workspace, or every agent in this workspace. | `--as`, `--workspace`, `--kind`, `--reply-to`, `--body-file` |
-| `intern inbox` | Read and acknowledge pending mail. | `--as`, `--workspace`, `--limit`, `--peek`, `--replay` |
-| `intern wait` | Block until mail is pending or the timeout expires. | `--as`, `--workspace`, `--timeout` |
-| `intern ls` | List registered agents; `--all` ignores `--workspace`. | `--workspace`, `--all` |
-| `intern claim <key>` | Acquire or renew exclusive ownership of a key, usually a file path. | `--workspace`, `--holder` |
-| `intern release <key>` | Release a claim using its lease ID. | `--workspace`, `--if-claim-id` |
-| `intern claims` | List file claims and their liveness; `--all` ignores `--workspace`. | `--workspace`, `--all` |
-| `intern doctor` | Report daemon, workspace, socket, database, and detected harness status. | `--workspace` |
-| `intern version` | Print the binary version. | none |
+| `tether` | List agents in the current workspace. | none |
+| `tether start` | Run the daemon in the foreground. | none |
+| `tether register [name]` | Register or refresh a named agent. A plain shell can register several names; use `--as <name>` for later agent-specific commands. | `--as`, `--workspace` |
+| `tether send <to> [body]` | Send a message to an agent, another workspace, or every agent in this workspace. | `--as`, `--workspace`, `--kind`, `--reply-to`, `--body-file` |
+| `tether inbox` | Read and acknowledge pending mail. | `--as`, `--workspace`, `--limit`, `--peek`, `--replay` |
+| `tether wait` | Block until mail is pending or the timeout expires. | `--as`, `--workspace`, `--timeout` |
+| `tether ls` | List registered agents; `--all` ignores `--workspace`. | `--workspace`, `--all` |
+| `tether claim <key>` | Acquire or renew exclusive ownership of a key, usually a file path. | `--workspace`, `--holder` |
+| `tether release <key>` | Release a claim using its lease ID. | `--workspace`, `--if-claim-id` |
+| `tether claims` | List file claims and their liveness; `--all` ignores `--workspace`. | `--workspace`, `--all` |
+| `tether doctor` | Report daemon, workspace, socket, database, and detected harness status. | `--workspace` |
+| `tether version` | Print the binary version. | none |
 
-`intern start`, `intern version`, and Cobra's generated `intern completion`
+`tether start`, `tether version`, and Cobra's generated `tether completion`
 command intentionally print text. Every successful daemon-facing command
-result, including bare `intern`, is JSON; errors are written to stderr.
+result, including bare `tether`, is JSON; errors are written to stderr.
 
 ## Messaging
 
@@ -103,13 +101,13 @@ For multi-line text or text containing shell-sensitive characters, send the
 body from a file or standard input:
 
 ```sh
-intern send reviewer --as frontend --kind handoff --body-file - <<'EOF'
+tether send reviewer --as frontend --kind handoff --body-file - <<'EOF'
 The parser now returns (Config, error).
 Update callers under cmd/ before merging.
 EOF
 ```
 
-`intern inbox` drains and acknowledges messages. Use `--peek` to inspect
+`tether inbox` drains and acknowledges messages. Use `--peek` to inspect
 pending mail without acknowledging it, or `--replay` to retrieve messages
 already delivered by an earlier drain. `--peek` and `--replay` cannot be used
 together.
@@ -125,33 +123,33 @@ process is gone. `claim` returns a fresh lease ID every time, including when
 it renews a claim; pass that exact ID to `release`.
 
 ```sh
-intern claim src/orders.go --holder "refactoring orders"
+tether claim src/orders.go --holder "refactoring orders"
 # edit the file
-intern release src/orders.go --if-claim-id <lease-id>
+tether release src/orders.go --if-claim-id <lease-id>
 ```
 
-If a live process owns the key, `claim` exits with code 5. Use `intern claims`
+If a live process owns the key, `claim` exits with code 5. Use `tether claims`
 to see the current owner.
 
 ## Local state and configuration
 
-Intern does not operate a network service. By default it stores messages in
-`~/.intern/intern.db` and logs the daemon to `~/.intern/daemon.log`. The socket
+Tether does not operate a network service. By default it stores messages in
+`~/.tether/tether.db` and logs the daemon to `~/.tether/daemon.log`. The socket
 path is chosen in this order:
 
-1. `INTERN_SOCK`
-2. `$XDG_RUNTIME_DIR/intern/sock`
-3. `~/.intern/sock`
+1. `TETHER_SOCK`
+2. `$XDG_RUNTIME_DIR/tether/sock`
+3. `~/.tether/sock`
 
 These environment variables are useful for isolated runs and automation:
 
 | Variable | Effect |
 | --- | --- |
-| `INTERN_SOCK` | Override the Unix-socket path; its parent must not be writable by group or others (use `0700` when possible). |
-| `INTERN_DB` | Override the SQLite database path. |
-| `INTERN_WORKSPACE` | Override workspace detection. |
-| `INTERN_SESSION_ID` | Provide a stable session ID for an otherwise unrecognised harness. |
-| `INTERN_VERSION` | Choose the release tag used by `docs/install.sh`. |
+| `TETHER_SOCK` | Override the Unix-socket path; its parent must not be writable by group or others (use `0700` when possible). |
+| `TETHER_DB` | Override the SQLite database path. |
+| `TETHER_WORKSPACE` | Override workspace detection. |
+| `TETHER_SESSION_ID` | Provide a stable session ID for an otherwise unrecognised harness. |
+| `TETHER_VERSION` | Choose the release tag used by `docs/install.sh`. |
 
 ## Exit codes
 

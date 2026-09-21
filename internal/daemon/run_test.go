@@ -12,8 +12,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/praneethravuri/intern/internal/protocol"
-	"github.com/praneethravuri/intern/internal/store"
+	"github.com/praneethravuri/tether/internal/protocol"
+	"github.com/praneethravuri/tether/internal/store"
 )
 
 func TestDaemonIsLive_NoSocketAtAll(t *testing.T) {
@@ -84,8 +84,8 @@ func TestRun_DoubleStartReturnsErrAlreadyRunning(t *testing.T) {
 	}
 	defer release()
 
-	t.Setenv("INTERN_SOCK", sockPath)
-	t.Setenv("INTERN_DB", filepath.Join(dir, "intern.db"))
+	t.Setenv("TETHER_SOCK", sockPath)
+	t.Setenv("TETHER_DB", filepath.Join(dir, "tether.db"))
 
 	if err := Run(); !errors.Is(err, ErrAlreadyRunning) {
 		t.Fatalf("Run() against an already-held lock = %v, want ErrAlreadyRunning", err)
@@ -99,7 +99,7 @@ func TestRun_DoubleStartReturnsErrAlreadyRunning(t *testing.T) {
 func TestEndToEndOverRealSocket(t *testing.T) {
 	dir := shortTempDir(t)
 
-	st, err := store.Open(context.Background(), filepath.Join(dir, "intern.db"))
+	st, err := store.Open(context.Background(), filepath.Join(dir, "tether.db"))
 	if err != nil {
 		t.Fatalf("open store: %v", err)
 	}

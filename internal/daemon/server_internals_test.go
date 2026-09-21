@@ -12,7 +12,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/praneethravuri/intern/internal/store"
+	"github.com/praneethravuri/tether/internal/store"
 )
 
 func TestAuthenticate_SessionMismatchIsRejected(t *testing.T) {

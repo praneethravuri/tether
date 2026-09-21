@@ -1,4 +1,4 @@
-// Command intern is the CLI for cross-harness agent messaging: one registry
+// Command tether is the CLI for cross-harness agent messaging: one registry
 // and inbox that any coding-agent harness can drive from the shell.
 package main
 
@@ -9,12 +9,12 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/praneethravuri/intern/internal/protocol"
+	"github.com/praneethravuri/tether/internal/protocol"
 )
 
 // version is overridden at build time:
 //
-//	go build -ldflags "-X main.version=$(git describe --tags)" ./cmd/intern
+//	go build -ldflags "-X main.version=$(git describe --tags)" ./cmd/tether
 var version = "dev"
 
 // Exit codes. These are part of the CLI's contract: scripts and agents branch
@@ -26,7 +26,7 @@ const (
 	exitGeneral = 1
 	// exitNoDaemon means the daemon could not be reached.
 	exitNoDaemon = 3
-	// exitTimeout means `intern wait` returned with no mail.
+	// exitTimeout means `tether wait` returned with no mail.
 	exitTimeout = 4
 	// exitConflict means the request collided with existing state, most often
 	// a name that is already registered in the workspace.
@@ -119,34 +119,34 @@ func main() {
 		return
 	}
 	if msg := errorMessage(err); msg != "" {
-		fmt.Fprintln(os.Stderr, "intern: "+msg)
+		fmt.Fprintln(os.Stderr, "tether: "+msg)
 	}
 	os.Exit(exitCodeFor(err))
 }
 
-const rootLong = `intern is a local message bus for coding agents.
+const rootLong = `tether is a local AI agent coordination layer for coding agents.
 
 Agents register a name inside a workspace derived from the shared Git root
-(or the current directory outside Git), unless $INTERN_WORKSPACE overrides it.
+(or the current directory outside Git), unless $TETHER_WORKSPACE overrides it.
 They address each other as name@workspace. A bare name uses the current
 workspace.
 
 Typical session:
 
-  intern register frontend          # claim a name in this workspace
-  intern ls                         # see who else is here
-  intern send backend --as frontend "..." # send a message
-  intern wait --as frontend --timeout 60s  # block until mail arrives
-  intern inbox --as frontend                # read it -- this also clears it
-  intern inbox --as frontend --peek         # look without clearing
+  tether register frontend          # claim a name in this workspace
+  tether ls                         # see who else is here
+  tether send backend --as frontend "..." # send a message
+  tether wait --as frontend --timeout 60s  # block until mail arrives
+  tether inbox --as frontend                # read it -- this also clears it
+  tether inbox --as frontend --peek         # look without clearing
 
 Message bodies should be passed with --body-file (use "-" for stdin) whenever
 they contain quotes, backticks, newlines or $ so the shell cannot mangle them.
 
-Output is JSON by default. Running intern with no arguments lists the agents
-in the current workspace. Run "intern start" to run the daemon itself in the
+Output is JSON by default. Running tether with no arguments lists the agents
+in the current workspace. Run "tether start" to run the daemon itself in the
 foreground -- daemon-facing commands start it automatically when needed;
-` + "`intern doctor`" + ` only reports its status and never starts one.
+` + "`tether doctor`" + ` only reports its status and never starts one.
 
 Exit codes:
   0  success
@@ -159,8 +159,8 @@ Exit codes:
 // makes a typo'd subcommand fail loudly instead of being silently ignored.
 func newRootCmd() *cobra.Command {
 	root := &cobra.Command{
-		Use:           "intern",
-		Short:         "Local message bus for coding agents",
+		Use:           "tether",
+		Short:         "Local AI agent coordination layer for coding agents",
 		Long:          rootLong,
 		SilenceUsage:  true,
 		SilenceErrors: true,

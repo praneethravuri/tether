@@ -3,7 +3,7 @@ package store
 import (
 	"time"
 
-	"github.com/praneethravuri/intern/internal/kind"
+	"github.com/praneethravuri/tether/internal/kind"
 )
 
 // Message kinds, re-exported from internal/kind so every existing call site

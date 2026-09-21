@@ -3,7 +3,7 @@ package main
 import (
 	"github.com/spf13/cobra"
 
-	"github.com/praneethravuri/intern/internal/protocol"
+	"github.com/praneethravuri/tether/internal/protocol"
 )
 
 const inboxLong = `Show the messages waiting for this agent.
@@ -29,10 +29,10 @@ func newInboxCmd() *cobra.Command {
 		Use:   "inbox",
 		Short: "Show messages waiting for this agent",
 		Long:  inboxLong,
-		Example: "  intern inbox\n" +
-			"  intern inbox --as frontend --limit 10\n" +
-			"  intern inbox --peek\n" +
-			"  intern inbox --replay",
+		Example: "  tether inbox\n" +
+			"  tether inbox --as frontend --limit 10\n" +
+			"  tether inbox --peek\n" +
+			"  tether inbox --replay",
 		Args: cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return runInbox(cmd, &opts)

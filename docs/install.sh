@@ -1,16 +1,16 @@
 #!/bin/sh
-# Installs intern for macOS/Linux. No sudo, ever.
+# Installs tether for macOS/Linux. No sudo, ever.
 #
-#   curl -fsSL https://praneethravuri.github.io/intern/install.sh | sh
+#   curl -fsSL https://praneethravuri.github.io/tether/install.sh | sh
 #
 # Env overrides:
-#   INTERN_VERSION      version tag to install, e.g. v0.3.2 (default: latest)
-#   INTERN_INSTALL_DIR  where to put the binaries (default: ~/.local/bin)
-#   INTERN_BASE_URL     override the GitHub releases base URL (testing only)
+#   TETHER_VERSION      version tag to install, e.g. v0.3.2 (default: latest)
+#   TETHER_INSTALL_DIR  where to put the binaries (default: ~/.local/bin)
+#   TETHER_BASE_URL     override the GitHub releases base URL (testing only)
 set -e
 
-REPO="praneethravuri/intern"
-BASE_URL="${INTERN_BASE_URL:-https://github.com/${REPO}/releases}"
+REPO="praneethravuri/tether"
+BASE_URL="${TETHER_BASE_URL:-https://github.com/${REPO}/releases}"
 
 # Wrapped in main() so a download truncated mid-transfer can't execute a
 # partial script -- the function body isn't run until the closing brace,
@@ -23,7 +23,7 @@ main() {
 	x86_64 | amd64) arch="amd64" ;;
 	arm64 | aarch64) arch="arm64" ;;
 	*)
-		echo "intern: unsupported architecture: $arch" >&2
+		echo "tether: unsupported architecture: $arch" >&2
 		exit 1
 		;;
 	esac
@@ -31,24 +31,24 @@ main() {
 	case "$os" in
 	darwin | linux) ;;
 	*)
-		echo "intern: unsupported OS: $os (this installer covers macOS and Linux only)" >&2
+		echo "tether: unsupported OS: $os (this installer covers macOS and Linux only)" >&2
 		exit 1
 		;;
 	esac
 
-	if [ -n "${INTERN_VERSION:-}" ]; then
-		download_url="${BASE_URL}/download/${INTERN_VERSION}"
+	if [ -n "${TETHER_VERSION:-}" ]; then
+		download_url="${BASE_URL}/download/${TETHER_VERSION}"
 	else
 		download_url="${BASE_URL}/latest/download"
 	fi
 
-	asset="intern_${os}_${arch}.tar.gz"
-	install_dir="${INTERN_INSTALL_DIR:-$HOME/.local/bin}"
+	asset="tether_${os}_${arch}.tar.gz"
+	install_dir="${TETHER_INSTALL_DIR:-$HOME/.local/bin}"
 
 	tmp_dir="$(mktemp -d)"
 	trap 'rm -rf "$tmp_dir"' EXIT
 
-	echo "intern: downloading ${asset}..."
+	echo "tether: downloading ${asset}..."
 	fetch "${download_url}/${asset}" "${tmp_dir}/${asset}"
 	fetch "${download_url}/checksums.txt" "${tmp_dir}/checksums.txt"
 
@@ -58,23 +58,23 @@ main() {
 
 	mkdir -p "${install_dir}"
 	if [ ! -w "${install_dir}" ]; then
-		echo "intern: ${install_dir} is not writable, and this installer never uses sudo." >&2
-		echo "        set INTERN_INSTALL_DIR to a directory you own." >&2
+		echo "tether: ${install_dir} is not writable, and this installer never uses sudo." >&2
+		echo "        set TETHER_INSTALL_DIR to a directory you own." >&2
 		exit 1
 	fi
 
-	mv "${tmp_dir}/intern" "${install_dir}/intern"
-	chmod 0755 "${install_dir}/intern"
+	mv "${tmp_dir}/tether" "${install_dir}/tether"
+	chmod 0755 "${install_dir}/tether"
 	# Not notarized, so macOS quarantines it -- left in place on purpose,
 	# since it's the one control that would catch a tampered release.
 	if [ "$os" = "darwin" ]; then
 		echo
-		echo "intern: this binary isn't notarized, so macOS will prompt on first launch."
+		echo "tether: this binary isn't notarized, so macOS will prompt on first launch."
 		echo "        Already verified the checksum above? Skip the prompt with:"
-		echo "          xattr -d com.apple.quarantine ${install_dir}/intern"
+		echo "          xattr -d com.apple.quarantine ${install_dir}/tether"
 	fi
 
-	echo "intern: installed $("${install_dir}/intern" version) to ${install_dir}"
+	echo "tether: installed $("${install_dir}/tether" version) to ${install_dir}"
 
 	case ":$PATH:" in
 	*":${install_dir}:"*) ;;
@@ -86,7 +86,7 @@ main() {
 	esac
 
 	echo
-	echo "Next: intern register <name>"
+	echo "Next: tether register <name>"
 }
 
 # fetch <url> <output path>
@@ -97,7 +97,7 @@ fetch() {
 	elif command -v wget >/dev/null 2>&1; then
 		wget -q --https-only "$1" -O "$2"
 	else
-		echo "intern: need curl or wget to install" >&2
+		echo "tether: need curl or wget to install" >&2
 		exit 1
 	fi
 }
@@ -110,7 +110,7 @@ verify_checksum() {
 
 	expected="$(awk -v n="$name" '$2 == n { print $1 }' "$checksums")"
 	if [ -z "$expected" ]; then
-		echo "intern: no checksum entry for ${name}" >&2
+		echo "tether: no checksum entry for ${name}" >&2
 		exit 1
 	fi
 
@@ -119,13 +119,13 @@ verify_checksum() {
 	elif command -v shasum >/dev/null 2>&1; then
 		actual="$(shasum -a 256 "$file" | awk '{print $1}')"
 	else
-		echo "intern: need sha256sum or shasum to verify the download" >&2
+		echo "tether: need sha256sum or shasum to verify the download" >&2
 		exit 1
 	fi
 
 	if [ "$expected" != "$actual" ]; then
 		rm -f "$file"
-		echo "intern: checksum mismatch for ${name} -- download deleted" >&2
+		echo "tether: checksum mismatch for ${name} -- download deleted" >&2
 		echo "        expected ${expected}, got ${actual}" >&2
 		exit 1
 	fi

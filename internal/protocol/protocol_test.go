@@ -17,10 +17,10 @@ func TestWireFormat_RoundTrip(t *testing.T) {
 
 	params, err := json.Marshal(RegisterParams{
 		Name:      "alice",
-		Workspace: "intern",
+		Workspace: "tether",
 		Harness:   "claude-code",
 		SessionID: "sess-1",
-		Cwd:       "/tmp/intern",
+		Cwd:       "/tmp/tether",
 		PID:       4242,
 	})
 	if err != nil {
@@ -115,8 +115,8 @@ func TestResponse_RoundTripTypedResult(t *testing.T) {
 			ID:          "m1",
 			ThreadID:    "t1",
 			ReplyTo:     "",
-			From:        "alice@intern",
-			To:          "bob@intern",
+			From:        "alice@tether",
+			To:          "bob@tether",
 			Kind:        "ask",
 			Body:        "ping",
 			CreatedAt:   "2026-07-28T09:59:00Z",
@@ -153,7 +153,7 @@ func TestResponse_RoundTripTypedResult(t *testing.T) {
 		t.Fatalf("messages got %d, want 1", len(result.Messages))
 	}
 	m := result.Messages[0]
-	if m.ID != "m1" || m.From != "alice@intern" || m.Body != "ping" {
+	if m.ID != "m1" || m.From != "alice@tether" || m.Body != "ping" {
 		t.Errorf("message mismatch: %+v", m)
 	}
 	if m.DeliveredAt == nil || *m.DeliveredAt != delivered {
@@ -271,7 +271,7 @@ func TestError_ImplementsErrorInterface(t *testing.T) {
 
 func TestResponse_OmitEmpty(t *testing.T) {
 	t.Run("no error key when Error is nil", func(t *testing.T) {
-		data, err := json.Marshal(OK("id-1", RegisterResult{Address: "alice@intern", Created: true}))
+		data, err := json.Marshal(OK("id-1", RegisterResult{Address: "alice@tether", Created: true}))
 		if err != nil {
 			t.Fatal(err)
 		}
